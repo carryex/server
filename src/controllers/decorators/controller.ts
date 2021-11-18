@@ -1,17 +1,29 @@
 import 'reflect-metadata';
-import express from 'express';
-
-const router = express.Router();
+import { AppRouter } from '../../AppRouter';
+import { MetadataKeys } from './MetadataKeys';
+import { Method } from './Methods';
 
 const controller = (routePrefix: string) => (target: Function) => {
   for (let key in target.prototype) {
     const routeHandler = target.prototype[key];
-    const path = Reflect.getMetadata('path', target.prototype, key);
+    const path = Reflect.getMetadata(MetadataKeys.path, target.prototype, key);
+    const method: Method = Reflect.getMetadata(
+      MetadataKeys.method,
+      target.prototype,
+      key
+    );
+
+    const middlewares =
+      Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) || [];
 
     if (path) {
-      router.get(`${routePrefix}${path}`, routeHandler);
+      AppRouter.instanse[method](
+        `${routePrefix}${path}`,
+        ...middlewares,
+        routeHandler
+      );
     }
   }
 };
 
-export { router, controller };
+export { controller };
