@@ -6,9 +6,7 @@
   "scripts": {
     "start:build": "tsc -w",
     "start:run": "nodemon build/index.js",
-    "start": "concurrently yarn:start:*",
-    "prettier-format": "prettier --config .prettierrc.json 'src/**/*.ts' --write",
-    "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
+    "start": "concurrently yarn:start:*"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +20,6 @@
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.43",
-    "@types/express": "^4.17.13",
-    "prettier": "2.4.1"
+    "@types/express": "^4.17.13"
   }
 }

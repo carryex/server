@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppRouter } from '../AppRouter';
+import { controller, get, use } from './decorators';
 
 const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
   if (req.session && req.session.loggedIn) {
@@ -10,26 +10,28 @@ const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
   res.status(403).send('Not permitted');
 };
 
-const router = AppRouter.instanse;
-
-router.get('/', (req: Request, res: Response) => {
-  if (req.session?.loggedIn) {
-    res.send(`
+@controller('')
+class RootController {
+  @get('/')
+  getRoot(req: Request, res: Response) {
+    if (req.session?.loggedIn) {
+      res.send(`
       <div>
         <div>You are logged in</div>
         <a href="/auth/logout">Logout</a>
       </div>`);
-  } else {
-    res.send(`
+    } else {
+      res.send(`
       <div>
         <div>You are not logged in</div>
         <a href="/auth/login">Login</a>
       </div>`);
+    }
   }
-});
 
-router.get('/protected', requireAuth, (req: Request, res: Response) => {
-  res.send('Welcome to protected');
-});
-
-export { router };
+  @get('/protected')
+  @use(requireAuth)
+  get(req: Request, res: Response) {
+    res.send('Welcome to protected');
+  }
+}
