@@ -5,7 +5,7 @@ import { MetadataKeys } from './MetadataKeys';
 import { Method } from './Methods';
 
 const bodyValidator =
-  (keys: string): RequestHandler =>
+  (keys: string[]): RequestHandler =>
   (req: Request, res: Response, next: NextFunction) => {
     if (!req.body) {
       res.status(422).send('Invalid request');
